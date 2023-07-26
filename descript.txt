@@ -1,0 +1,15 @@
+Charset,UTF-8
+readme.charset,UTF-8
+readme.readme.md
+type,plugin
+name,ukagakaNihonKokkai
+craftman,ambergon
+filename,main.dll
+
+id,7879fd32-b7ea-7cf3-cbb7-c27e8b9897a0
+
+secondchangeinterval,1
+//otherghosttalk,before
+
+//更新url
+//homeurl,
