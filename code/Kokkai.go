@@ -1,13 +1,13 @@
 package main
 
 import (
-    "fmt"
     "io"
     "net/http"
     "encoding/json"
     "time"
     "regexp"
     "strings"
+    "strconv"
 )
 
 
@@ -105,9 +105,9 @@ func do() {
 
     var t public
     json.Unmarshal( body , &t)
-    fmt.Print( "取得件数 : " )
-    fmt.Println( t.NumberOfRecords )
 
+    //最後にn/取得件数を表示しようかね。
+    num := strconv.Itoa( t.NumberOfRecords )
     _i := 0
     var _array []string
     for( _i < len( t.SpeechRecord ) ){
@@ -152,7 +152,9 @@ func do() {
             }
             _x++
         }
-        _text = _text + "\\_q"
+
+        _I := strconv.Itoa( _i )
+        _text = _text + _I + "/" + num + "\\_q"
         _array = append( _array , _text )
         _i++
     }
