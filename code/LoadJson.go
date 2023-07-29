@@ -7,8 +7,10 @@ import (
 )
 
 type KokkaiConfig struct {
-    StartSec         int
-    IntervalSec      int 
+    StartSec            int
+    IntervalSec         int 
+    Words               string
+    Human               string
 }
 var Config KokkaiConfig
 

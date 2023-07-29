@@ -1,4 +1,6 @@
 {
      "StartSec"     : 600 ,
-     "IntervalSec"  : 40 
+     "IntervalSec"  : 40  ,
+     "Words"        : "AI 著作権,原発,放送法"        ,
+     "Human"        : "浜田聡,杉田水脈,高市早苗"
 }

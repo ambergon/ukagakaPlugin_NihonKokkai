@@ -55,11 +55,12 @@ func load(h C.HGLOBAL, length C.long ) C.BOOL {
     //設定読み込み
     LoadJson()
 
-    //初期化。
-    Sec      = 0
-    Interval = Config.IntervalSec
+    ////初期化。
+    Sec         = 0
+    Interval    = Config.IntervalSec
+    OldKokkai   = ""
 
-    //国会回収
+    ////国会回収
     go do()
 
 	C.GlobalFree( h )
@@ -113,8 +114,9 @@ func request( h C.HGLOBAL, length *C.long ) C.HGLOBAL {
 
     //実行関数
     if ID == "OnOtherGhostTalk" {
+    //} else if ID == "OnSecondChange" {
     } else if ID == "OnSecondChange" && len( KokkaiArray ) != 0 {
-        //3時間までカウント。
+        ////3時間までカウント。
         if 10800 > Sec {
             Sec++
         }
@@ -122,15 +124,16 @@ func request( h C.HGLOBAL, length *C.long ) C.HGLOBAL {
         if Sec >= Config.StartSec {
             if Interval >= Config.IntervalSec {
                 Interval = 0
-                Value         = KokkaiArray[0]
-                KokkaiArray   = KokkaiArray[1:]
+                Value           = "\\0\\b[2]\\_q" + KokkaiArray[0] + "\\_q"
+                OldKokkai       = "\\0\\b[2]\\_q" + KokkaiArray[0] + "\\_q"
+                KokkaiArray     = KokkaiArray[1:]
             }
             Interval++
         }
 
     } else if ID == "OnMenuExec"  {
     } else if ID == "OnKokkaiUrl"  {
-        Value = "\\j[" + References[0] + "]" 
+        Value = "\\j[" + References[0] + "]" + OldKokkai
     } else {
         //fmt.Println( "no touch :" + ID )
         //fmt.Print( "NOTIFY : " )
