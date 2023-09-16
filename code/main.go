@@ -116,12 +116,8 @@ func request( h C.HGLOBAL, length *C.long ) C.HGLOBAL {
     if ID == "OnOtherGhostTalk" {
     //} else if ID == "OnSecondChange" {
     } else if ID == "OnSecondChange" && len( KokkaiArray ) != 0 {
-        ////3時間までカウント。
-        if 10800 > Sec {
-            Sec++
-        }
         //実行開始
-        if Sec >= Config.StartSec {
+        if Config.StartSec < Sec {
             if Interval >= Config.IntervalSec {
                 Interval = 0
                 Value           = "\\0\\b[2]\\_q" + KokkaiArray[0] + "\\_q"
@@ -129,6 +125,8 @@ func request( h C.HGLOBAL, length *C.long ) C.HGLOBAL {
                 KokkaiArray     = KokkaiArray[1:]
             }
             Interval++
+        } else {
+            Sec++
         }
 
     } else if ID == "OnMenuExec"  {

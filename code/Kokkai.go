@@ -96,9 +96,6 @@ func do(){
 
 func CheckWord( Word string , Human string ) {
 	re := regexp.MustCompile("T.*")
-    now := time.Now().AddDate( 0, 0, -3).Format(time.RFC3339)
-	now = re.ReplaceAllString( now, "" )
-    //fmt.Println(now)
 
     req, _ := http.NewRequest("GET", Url , nil)
     q := req.URL.Query()
@@ -112,8 +109,18 @@ func CheckWord( Word string , Human string ) {
         q.Add( "speaker"      , Human     )
     }
     q.Add( "searchRange"  , "本文"    )
-    q.Add( "from"         , now       )
-    q.Add( "util"         , now       )
+
+
+    //now := time.Now().AddDate( 0, 0, -3).Format(time.RFC3339)
+    //q.Add( "from"         , now       )
+    //q.Add( "util"         , now       )
+    from := time.Now().AddDate( 0, 0, - Config.From).Format(time.RFC3339)
+	from = re.ReplaceAllString( from , "" )
+
+    util := time.Now().AddDate( 0, 0, - Config.Util).Format(time.RFC3339)
+    util = re.ReplaceAllString( util , "" )
+    q.Add( "from"         , from       )
+    q.Add( "util"         , util       )
     //q.Add( "from"         , "2023-05-16"    )
     //q.Add( "util"         , "2023-05-16"    )
 
