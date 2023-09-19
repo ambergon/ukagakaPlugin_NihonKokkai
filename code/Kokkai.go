@@ -1,6 +1,7 @@
 package main
 
 import (
+    "fmt"
     "io"
     "net/http"
     "encoding/json"
@@ -113,16 +114,20 @@ func CheckWord( Word string , Human string ) {
 
     //now := time.Now().AddDate( 0, 0, -3).Format(time.RFC3339)
     //q.Add( "from"         , now       )
-    //q.Add( "util"         , now       )
-    from := time.Now().AddDate( 0, 0, - Config.From).Format(time.RFC3339)
+    //q.Add( "until"         , now       )
+    from := time.Now().AddDate( 0, 0, Config.From).Format(time.RFC3339)
 	from = re.ReplaceAllString( from , "" )
 
-    util := time.Now().AddDate( 0, 0, - Config.Util).Format(time.RFC3339)
-    util = re.ReplaceAllString( util , "" )
+    until := time.Now().AddDate( 0, 0, Config.Until).Format(time.RFC3339)
+    until = re.ReplaceAllString( until , "" )
     q.Add( "from"         , from       )
-    q.Add( "util"         , util       )
+    q.Add( "until"         , until       )
+    fmt.Print( "検索開始日" )
+    fmt.Println( from )
+    fmt.Print( "検索終了日" )
+    fmt.Println( until )
     //q.Add( "from"         , "2023-05-16"    )
-    //q.Add( "util"         , "2023-05-16"    )
+    //q.Add( "until"         , "2023-05-16"    )
 
     req.URL.RawQuery = q.Encode()
     var client *http.Client = &http.Client{}
@@ -132,12 +137,18 @@ func CheckWord( Word string , Human string ) {
     var t public
     json.Unmarshal( body , &t)
 
-    _i := 0
+    //検索結果が無かった場合表示しない。
+    if Config.SearchZero == true && len( t.SpeechRecord ) == 0 {
+        return
+    }
     _text := "検索対象 : " + Word + "\\n"
+    _i := 0
     for( _i < len( t.SpeechRecord ) ){
         _text = _text + "\\_a[OnKokkaiUrl,"
         _text = _text + t.SpeechRecord[_i].SpeechURL
         _text = _text + "]"
+
+        _text = _text + t.SpeechRecord[_i].Date + " "
 
         _text = _text + t.SpeechRecord[_i].NameOfHouse + " "
         _text = _text + t.SpeechRecord[_i].NameOfMeeting + " "
@@ -156,97 +167,5 @@ func CheckWord( Word string , Human string ) {
 
 
 
-
-
-//会議名見てもしゃーないのでいったん凍結。
-//func do() {
-//    //前日までの情報を拾えるように。
-//	re := regexp.MustCompile("T.*")
-//    now := time.Now().AddDate( 0, 0, -1).Format(time.RFC3339)
-//	now = re.ReplaceAllString( now, "" )
-//    //fmt.Println(now)
-//
-//
-//    url     := "https://kokkai.ndl.go.jp/api/speech"
-//    req, _ := http.NewRequest("GET", url , nil)
-//
-//    q := req.URL.Query()
-//    q.Add("recordPacking"       , "json"    )
-//    //q.Add("speaker"       , "安倍晋三"    )
-//    //q.Add("any"       , "放送法"    )
-//
-//    //ここを空にすることはできない。
-//    q.Add( "any"          , "案件"    )
-//    q.Add( "searchRange"  , "冒頭"    )
-//    q.Add( "from"         , now       )
-//    q.Add( "util"         , now       )
-//    //q.Add( "from"         , "2023-06-20"    )
-//    //q.Add( "util"         , "2023-06-20"    )
-//
-//    req.URL.RawQuery = q.Encode()
-//    var client *http.Client = &http.Client{}
-//    resp, _ := client.Do( req )
-//    defer resp.Body.Close()
-//
-//    body, _ := io.ReadAll(resp.Body)
-//    //fmt.Println( string( body ) )
-//
-//    var t public
-//    json.Unmarshal( body , &t)
-//
-//    //最後にn/取得件数を表示しようかね。
-//    num := strconv.Itoa( t.NumberOfRecords )
-//    _i := 0
-//    var _array []string
-//    for( _i < len( t.SpeechRecord ) ){
-//        _text := "\\0\\b[2]\\_q"
-//        //fmt.Println( t.SpeechRecord[_i].SpeechID )
-//        //fmt.Println( t.SpeechRecord[_i].Date )
-//        //fmt.Println( t.SpeechRecord )
-//        //fmt.Print( "# " )
-//
-//        _text = _text + "\\_a[OnKokkaiUrl,"
-//        _text = _text + t.SpeechRecord[_i].SpeechURL
-//        _text = _text + "]\\n"
-//
-//        _text = _text + t.SpeechRecord[_i].NameOfHouse
-//        _text = _text + " "
-//        _text = _text + t.SpeechRecord[_i].NameOfMeeting
-//        _text = _text + " "
-//        _text = _text + t.SpeechRecord[_i].Issue 
-//
-//        _text = _text + "\\_a\\n"
-//
-//        str    := t.SpeechRecord[_i].Speech 
-//        str     = strings.Replace( str , "　" , " " , -1 )
-//        lines  := strings.Split( str , "\n" )
-//        //str = strings.Replace( str , "" , "" , -1 )
-//        _x := 0
-//        for( _x < len( lines )){
-//            //ここで特定のワードを含む内容化精査するぜ。
-//            check_seigan    := regexp.MustCompile("請願")
-//            check_tinjyou   := regexp.MustCompile("陳情書")
-//            check_hourituan := regexp.MustCompile("法律案")
-//            check_tyousyo   := regexp.MustCompile("調書")
-//
-//            if check_seigan.MatchString( lines[ _x ] ) {
-//                _text = _text + lines[ _x ] + "\\n"
-//            }else if check_tinjyou.MatchString( lines[ _x ] ) {
-//                _text = _text + lines[ _x ] + "\\n"
-//            }else if check_hourituan.MatchString( lines[ _x ] ) {
-//                _text = _text + lines[ _x ] + "\\n"
-//            }else if check_tyousyo.MatchString( lines[ _x ] ) {
-//                _text = _text + lines[ _x ] + "\\n"
-//            }
-//            _x++
-//        }
-//
-//        _I := strconv.Itoa( _i )
-//        _text = _text + _I + "/" + num + "\\_q"
-//        _array = append( _array , _text )
-//        _i++
-//    }
-//    KokkaiArray = _array
-//}
 
 

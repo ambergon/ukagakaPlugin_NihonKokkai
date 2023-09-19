@@ -11,8 +11,9 @@ type KokkaiConfig struct {
     IntervalSec         int 
     Words               string
     Human               string
+    SearchZero          bool
     From                int 
-    Util                int
+    Until               int
 }
 var Config KokkaiConfig
 
