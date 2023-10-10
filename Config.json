@@ -1,7 +1,7 @@
 {
      "StartSec"     : 600 ,
      "IntervalSec"  : 40  ,
-     "Words"        : "AI 著作権,原発,放送法"        ,
+     "Words"        : "AI 著作権,原発,放送法,ガソリン",
      "Human"        : "浜田聡,杉田水脈,高市早苗,赤松健,神谷宗幣",
      "SearchZero"   : true ,
      "From"         : -31,

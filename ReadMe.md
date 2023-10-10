@@ -1,5 +1,6 @@
 # ukagakaPlugin_NihonKokkai
 日本の国会をチェックするためのSSPプラグイン。<br>
+[国会会議録検索システム](https://kokkai.ndl.go.jp/#/result)<br>の検索APIを使用しています。
 検索対象は本文中の内容や発言者です。<br>
 検索にヒットした会議へのリンクをリスト状にしてバルーンに表示します。<br>
 
